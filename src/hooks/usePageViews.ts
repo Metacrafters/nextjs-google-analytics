@@ -24,7 +24,14 @@ export function usePageViews({
       const _gaMeasurementId =
         process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? gaMeasurementId;
 
-      pageView({ path: url.toString() }, _gaMeasurementId);
+      if(!_gaMeasurementId) {
+        return;
+      }
+
+      const gaMeasurementsIdArray = _gaMeasurementId.split(',');
+      gaMeasurementsIdArray.map((x,i) => {
+        pageView({ path: url.toString() }, x);
+      })
     };
 
     router.events.on("routeChangeComplete", handleRouteChange);

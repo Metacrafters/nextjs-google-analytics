@@ -38,10 +38,12 @@ export function GoogleAnalytics({
     return null;
   }
 
+  const gaMeasurementsIdArray = _gaMeasurementId.split(',');
+
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${_gaMeasurementId}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementsIdArray[0]}`}
         strategy={strategy}
       />
       <Script id="nextjs-google-analytics">
@@ -49,10 +51,14 @@ export function GoogleAnalytics({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${_gaMeasurementId}', {
-              page_path: window.location.pathname,
+        `}
+        {gaMeasurementsIdArray.map((x, i) =>
+          `
+            gtag('config', '${x}', {
+              page_path: window.location.pathname
             });
-          `}
+          `
+        ).join('')}
       </Script>
     </>
   );
